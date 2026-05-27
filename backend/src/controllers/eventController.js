@@ -1,5 +1,5 @@
-const Event = require("../models/Event");
-const Seat = require("../models/Seat");
+const Event = require('../models/Event');
+const Seat = require('../models/Seat');
 
 // CREATE EVENT — POST /api/events
 // Only organizers can do this
