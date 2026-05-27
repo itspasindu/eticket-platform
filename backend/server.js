@@ -15,16 +15,28 @@ require('./src/config/redis');
 
 const app = express();
 
-app.use(cors({
-  origin: [
-    'http://localhost:5173',        // your local frontend
-    'http://localhost:3000',        // just in case
-    'https://eticket-platform.onrender.com', // add this after Vercel deploy
-  ],
+const allowedOrigins = new Set([
+  process.env.CLIENT_URL,
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://localhost:3000',
+].filter(Boolean));
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.has(origin)) {
+      return callback(null, true);
+    }
+
+    callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+};
+
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 
 app.use(express.json());
 
@@ -39,6 +51,10 @@ setInterval(cleanupExpiredLocks, 5 * 60 * 1000);
 
 app.get('/', (req, res) => {
   res.json({ message: 'E-Ticket API is running!' });
+});
+
+app.get('/health', (req, res) => {
+  res.json({ ok: true });
 });
 
 const PORT = process.env.PORT || 5000;
