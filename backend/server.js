@@ -19,6 +19,7 @@ const allowedOrigins = new Set(
   [
     process.env.CLIENT_URL,
     process.env.FRONTEND_URL,
+    "https://idyllic-starburst-d2ff85.netlify.app",
     "http://localhost:5173",
     "http://localhost:3000",
   ].filter(Boolean),
@@ -26,11 +27,18 @@ const allowedOrigins = new Set(
 
 const corsOptions = {
   origin(origin, callback) {
-    if (!origin || allowedOrigins.has(origin)) {
+    const normalizedOrigin = origin?.trim();
+    const isNetlifyOrigin = normalizedOrigin?.includes("netlify.app");
+
+    if (
+      !normalizedOrigin ||
+      allowedOrigins.has(normalizedOrigin) ||
+      isNetlifyOrigin
+    ) {
       return callback(null, true);
     }
 
-    callback(new Error(`CORS blocked for origin: ${origin}`));
+    callback(new Error(`CORS blocked for origin: ${normalizedOrigin}`));
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
