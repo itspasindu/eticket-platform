@@ -1,10 +1,9 @@
-const Event = require('../models/Event');
-const Seat = require('../models/Seat');
+const Event = require("../models/Event");
+const Seat = require("../models/Seat");
 
-// ─────────────────────────────────────────
 // CREATE EVENT — POST /api/events
 // Only organizers can do this
-// ─────────────────────────────────────────
+
 const createEvent = async (req, res) => {
   try {
     const {
@@ -48,11 +47,11 @@ const createEvent = async (req, res) => {
         for (let i = 1; i <= cat.seatsPerRow; i++) {
           seatsToCreate.push({
             event: event._id,
-            seatNumber: `${row}${i}`,  // e.g. "A1", "B5"
+            seatNumber: `${row}${i}`, // e.g. "A1", "B5"
             row: row,
             category: cat.category,
             price: cat.price,
-            status: 'available',
+            status: "available",
           });
         }
       });
@@ -62,19 +61,18 @@ const createEvent = async (req, res) => {
     await Seat.insertMany(seatsToCreate);
 
     res.status(201).json({
-      message: 'Event created successfully',
+      message: "Event created successfully",
       event,
       seatsCreated: seatsToCreate.length,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-// ─────────────────────────────────────────
 // GET ALL EVENTS — GET /api/events
 // Public — anyone can browse
-// ─────────────────────────────────────────
+
 const getEvents = async (req, res) => {
   try {
     // req.query contains URL query params
@@ -85,12 +83,12 @@ const getEvents = async (req, res) => {
     const filter = { isPublished: true }; // only show published events
 
     if (category) filter.category = category;
-    if (city) filter['venue.city'] = city;
+    if (city) filter["venue.city"] = city;
     if (search) {
       // Search in title or description (case insensitive)
       filter.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
       ];
     }
 
@@ -98,8 +96,8 @@ const getEvents = async (req, res) => {
     const skip = (page - 1) * limit; // page 2 = skip first 10
 
     const events = await Event.find(filter)
-      .populate('organizer', 'name email') // replace organizer ID with actual name+email
-      .sort({ date: 1 })                   // sort by date ascending
+      .populate("organizer", "name email") // replace organizer ID with actual name+email
+      .sort({ date: 1 }) // sort by date ascending
       .skip(skip)
       .limit(Number(limit));
 
@@ -114,21 +112,22 @@ const getEvents = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-// ─────────────────────────────────────────
 // GET SINGLE EVENT — GET /api/events/:id
 // Public
-// ─────────────────────────────────────────
+
 const getEventById = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.id)
-      .populate('organizer', 'name email');
+    const event = await Event.findById(req.params.id).populate(
+      "organizer",
+      "name email",
+    );
 
     if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
+      return res.status(404).json({ message: "Event not found" });
     }
 
     // Get seat summary for this event
@@ -136,66 +135,68 @@ const getEventById = async (req, res) => {
       { $match: { event: event._id } },
       {
         $group: {
-          _id: { category: '$category', status: '$status' },
+          _id: { category: "$category", status: "$status" },
           count: { $sum: 1 },
-          price: { $first: '$price' },
+          price: { $first: "$price" },
         },
       },
     ]);
 
     res.status(200).json({ event, seatSummary });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-// ─────────────────────────────────────────
 // UPDATE EVENT — PUT /api/events/:id
 // Only the organizer who created it
-// ─────────────────────────────────────────
+
 const updateEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
 
     if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
+      return res.status(404).json({ message: "Event not found" });
     }
 
     // Check ownership — only creator can edit
     // event.organizer is ObjectId, req.user.id is string → convert to compare
     if (event.organizer.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'Not authorized to edit this event' });
+      return res
+        .status(403)
+        .json({ message: "Not authorized to edit this event" });
     }
 
     const updatedEvent = await Event.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
       // new: true      → return updated doc (not old one)
       // runValidators  → apply schema rules on update too
     );
 
-    res.status(200).json({ message: 'Event updated', event: updatedEvent });
+    res.status(200).json({ message: "Event updated", event: updatedEvent });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-// ─────────────────────────────────────────
 // DELETE EVENT — DELETE /api/events/:id
 // Only the organizer who created it
-// ─────────────────────────────────────────
+
 const deleteEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
 
     if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
+      return res.status(404).json({ message: "Event not found" });
     }
 
     // Check ownership
     if (event.organizer.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'Not authorized to delete this event' });
+      return res
+        .status(403)
+        .json({ message: "Not authorized to delete this event" });
     }
 
     await Event.findByIdAndDelete(req.params.id);
@@ -203,34 +204,33 @@ const deleteEvent = async (req, res) => {
     // Also delete all seats belonging to this event
     await Seat.deleteMany({ event: req.params.id });
 
-    res.status(200).json({ message: 'Event and seats deleted successfully' });
+    res.status(200).json({ message: "Event and seats deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-// ─────────────────────────────────────────
 // PUBLISH EVENT — PUT /api/events/:id/publish
 // Makes event visible to public
-// ─────────────────────────────────────────
+
 const publishEvent = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
 
     if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
+      return res.status(404).json({ message: "Event not found" });
     }
 
     if (event.organizer.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'Not authorized' });
+      return res.status(403).json({ message: "Not authorized" });
     }
 
     event.isPublished = true;
     await event.save();
 
-    res.status(200).json({ message: 'Event published!', event });
+    res.status(200).json({ message: "Event published!", event });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -238,12 +238,13 @@ const publishEvent = async (req, res) => {
 // Organizer sees only their own events
 const getMyEvents = async (req, res) => {
   try {
-    const events = await Event.find({ organizer: req.user.id })
-      .sort({ createdAt: -1 });
+    const events = await Event.find({ organizer: req.user.id }).sort({
+      createdAt: -1,
+    });
 
     res.status(200).json({ events });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 

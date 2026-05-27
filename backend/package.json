@@ -19,6 +19,8 @@
     "ioredis": "^5.11.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.2",
+    "nodemailer": "^8.0.9",
+    "qrcode": "^1.5.4",
     "uuid": "^14.0.0"
   },
   "devDependencies": {
