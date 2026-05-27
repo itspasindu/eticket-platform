@@ -2,8 +2,12 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./src/config/db');
+require('./src/config/redis')
 const authRoutes = require('./src/routes/authRoutes');
 const eventRoutes = require('./src/routes/eventRoutes');
+const { cleanupExpiredLocks } = require('./src/controllers/seatController');
+const seatRoutes    = require('./src/routes/seatRoutes');
+const bookingRoutes = require('./src/routes/bookingRoutes');
 
 dotenv.config();
 connectDB();
@@ -12,6 +16,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/seats',    seatRoutes);
+app.use('/api/bookings', bookingRoutes);
+setInterval(cleanupExpiredLocks, 5 * 60 * 1000);
 
 // Routes — all auth routes start with /api/auth
 app.use('/api/auth', authRoutes);
