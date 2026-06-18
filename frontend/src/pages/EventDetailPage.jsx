@@ -8,6 +8,7 @@ import useAuthStore from '../store/authStore';
 import SeatMap from '../components/ui/SeatMap';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
+import EventRecommendations from "../components/ui/EventRecommendations";
 
 const EventDetailPage = () => {
   const { id }                          = useParams();
@@ -196,6 +197,10 @@ const EventDetailPage = () => {
         </div>
 
       </div>
+      <EventRecommendations
+        title="Similar Events"
+        fetchUrl={`http://localhost:5001/recommendations/similar/${id}`}
+      />
     </div>
   );
 };

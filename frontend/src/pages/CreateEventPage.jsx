@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createEventAPI, publishEventAPI } from '../api/events';
 import toast from 'react-hot-toast';
+import AIDescriptionGenerator from "../components/ui/AIDescriptionGenerator";
 
 const CreateEventPage = () => {
   const navigate = useNavigate();
@@ -117,7 +118,15 @@ const CreateEventPage = () => {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-400 mb-1.5">Description</label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm text-gray-400">Description</label>
+              <AIDescriptionGenerator
+                eventName={form.title}
+                category={form.category}
+                date={form.date}
+                onGenerated={(text) => setForm({ ...form, description: text })}
+              />
+            </div>
             <textarea
               name="description"
               className="input min-h-[120px] resize-none"

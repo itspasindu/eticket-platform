@@ -8,9 +8,10 @@ import LoadingSpinner from '../components/ui/LoadingSpinner';
 import { QRCodeSVG } from 'qrcode.react';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
+import EventRecommendations from "../components/ui/EventRecommendations";
 
 const DashboardPage = () => {
-  const { setUser } = useAuthStore();
+  const { setUser, user } = useAuthStore();
 
   // Load user profile
   useEffect(() => {
@@ -135,6 +136,11 @@ const DashboardPage = () => {
           ))}
         </div>
       )}
+
+      <EventRecommendations
+        title="Recommended For You"
+        fetchUrl={user ? `http://localhost:5001/recommendations/personalized/${user._id}` : null}
+      />
 
     </div>
   );

@@ -9,6 +9,7 @@ import EventDetailPage from "./pages/EventDetailPage";
 import DashboardPage from "./pages/DashboardPage";
 import OrganizerPage from "./pages/OrganizerPage"; // ADD
 import CreateEventPage from "./pages/CreateEventPage"; // ADD
+import Chatbot from "./components/Chatbot";
 
 // Protect any logged-in user
 const ProtectedRoute = ({ children }) => {
@@ -66,6 +67,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      <Chatbot />
     </div>
   );
 }
