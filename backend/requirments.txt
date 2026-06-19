@@ -1,5 +1,6 @@
+Flask
+Flask-CORS
 openai
 python-dotenv
-flask
-flask-cors
-requests
+pymongo
+scikit-learn
