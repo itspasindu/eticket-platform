@@ -1,2 +1,10 @@
 openai
 python-dotenv
+flask
+flask-cors
+pymongo
+scikit-learn
+gunicorn
+flask
+flask-cors
+requests
