@@ -1,26 +1,25 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getEventsAPI } from '../api/events';
-import EventCard from '../components/ui/EventCard';
-import LoadingSpinner from '../components/ui/LoadingSpinner';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getEventsAPI } from "../api/events";
+import EventCard from "../components/ui/EventCard";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 import EventRecommendations from "../components/ui/EventRecommendations";
 import useAuthStore from "../store/authStore";
 
 const HomePage = () => {
-  const [search, setSearch]     = useState('');
-  const [category, setCategory] = useState('');
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
 
   const { user } = useAuthStore();
   const { data, isLoading } = useQuery({
-    queryKey: ['events', search, category],
+    queryKey: ["events", search, category],
     queryFn: () => getEventsAPI({ search, category }).then((r) => r.data),
   });
 
-  const categories = ['concert', 'sports', 'theater', 'comedy', 'other'];
+  const categories = ["concert", "sports", "theater", "comedy", "other"];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-
       {/* Hero */}
       <div className="text-center mb-12">
         <h1 className="text-5xl font-extrabold text-white mb-4">
@@ -72,9 +71,8 @@ const HomePage = () => {
 
       <EventRecommendations
         title="Recommended For You"
-        fetchUrl={user ? `http://localhost:5001/recommendations/personalized/${user._id}` : null}
+        fetchUrl={user ? `/ai/recommendations/personalized/${user._id}` : null}
       />
-      
     </div>
   );
 };

@@ -8,6 +8,7 @@ const eventRoutes = require("./src/routes/eventRoutes");
 const seatRoutes = require("./src/routes/seatRoutes");
 const bookingRoutes = require("./src/routes/bookingRoutes");
 const ticketRoutes = require("./src/routes/ticketRoutes");
+const aiRoutes = require("./src/routes/aiRoutes");
 
 dotenv.config();
 connectDB();
@@ -20,8 +21,10 @@ const allowedOrigins = new Set(
     process.env.CLIENT_URL,
     process.env.FRONTEND_URL,
     "https://idyllic-starburst-d2ff85.netlify.app",
+    "https://eticket-platform-2.onrender.com",
     "http://localhost:5173",
     "http://localhost:3000",
+    "https://eticket-platform-1.onrender.com",
   ].filter(Boolean),
 );
 
@@ -55,6 +58,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api/seats", seatRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/tickets", ticketRoutes);
+app.use("/api/ai", aiRoutes);
 
 const { cleanupExpiredLocks } = require("./src/controllers/seatController");
 setInterval(cleanupExpiredLocks, 5 * 60 * 1000);
