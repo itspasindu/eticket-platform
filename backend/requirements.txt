@@ -1,0 +1,8 @@
+openai
+python-dotenv
+flask
+flask-cors
+pymongo
+scikit-learn
+gunicorn
+requests

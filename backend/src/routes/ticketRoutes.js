@@ -11,6 +11,7 @@ const { protect, authorize } = require('../middleware/authMiddleware');
 router.get('/:bookingId/qr', protect, generateQR);
 
 // Send ticket email (ticket owner only)
+router.get('/:bookingId/send-email', protect, sendTicketEmail);
 router.post('/:bookingId/send-email', protect, sendTicketEmail);
 
 // Validate ticket at venue (admin or organizer only)
