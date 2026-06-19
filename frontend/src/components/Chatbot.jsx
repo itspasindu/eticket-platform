@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { chatAPI } from "../api/ai";
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { from: "bot", text: "Hi! Welcome. How can I help you today?" }
+    { from: "bot", text: "Hi! Welcome. How can I help you today?" },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -11,9 +12,11 @@ export default function Chatbot() {
   const formatMessage = (text) => {
     return text.split("\n").map((line, lineIndex) => (
       <span key={lineIndex}>
-        {line.split("**").map((part, i) =>
-          i % 2 === 1 ? <strong key={i}>{part}</strong> : part
-        )}
+        {line
+          .split("**")
+          .map((part, i) =>
+            i % 2 === 1 ? <strong key={i}>{part}</strong> : part,
+          )}
         <br />
       </span>
     ));
@@ -23,21 +26,16 @@ export default function Chatbot() {
     if (!input.trim()) return;
 
     const userMsg = { from: "user", text: input };
-    const updatedMessages = [...messages, userMsg];  
+    const updatedMessages = [...messages, userMsg];
     setMessages(updatedMessages);
     setInput("");
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5001/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: input,
-          history: updatedMessages  
-        }),
+      const { data } = await chatAPI({
+        message: input,
+        history: updatedMessages,
       });
-      const data = await res.json();
       setMessages((prev) => [...prev, { from: "bot", text: data.reply }]);
     } catch {
       setMessages((prev) => [
@@ -61,18 +59,28 @@ export default function Chatbot() {
           {/* Header */}
           <div className="bg-[#6366f1] text-white px-4 py-3 flex justify-between items-center">
             <span className="font-semibold text-sm">Support Chat</span>
-            <button onClick={() => setOpen(false)} className="text-white text-lg leading-none">&times;</button>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-white text-lg leading-none"
+            >
+              &times;
+            </button>
           </div>
 
           {/* Messages */}
           <div className="flex-1 p-3 overflow-y-auto max-h-72 space-y-2 bg-gray-50">
             {messages.map((msg, i) => (
-              <div key={i} className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`px-3 py-2 rounded-2xl text-sm max-w-[75%] ${
-                  msg.from === "user"
-                    ? "bg-[#6366f1] text-white rounded-br-none"
-                    : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
-                }`}>
+              <div
+                key={i}
+                className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`px-3 py-2 rounded-2xl text-sm max-w-[75%] ${
+                    msg.from === "user"
+                      ? "bg-[#6366f1] text-white rounded-br-none"
+                      : "bg-white text-gray-800 border border-gray-200 rounded-bl-none"
+                  }`}
+                >
                   {formatMessage(msg.text)}
                 </div>
               </div>

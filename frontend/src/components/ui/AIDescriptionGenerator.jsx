@@ -1,6 +1,12 @@
 import { useState } from "react";
+import { generateDescriptionAPI } from "../../api/ai";
 
-export default function AIDescriptionGenerator({ onGenerated, eventName, category, date }) {
+export default function AIDescriptionGenerator({
+  onGenerated,
+  eventName,
+  category,
+  date,
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -18,15 +24,10 @@ export default function AIDescriptionGenerator({ onGenerated, eventName, categor
   const handleGenerate = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5001/generate-description", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
+      const { data } = await generateDescriptionAPI(form);
       if (data.description) {
         onGenerated(data.description); // sends text to description box
-        setOpen(false);               // closes popup
+        setOpen(false); // closes popup
       }
     } catch (e) {
       alert("Something went wrong. Try again.");
@@ -50,11 +51,17 @@ export default function AIDescriptionGenerator({ onGenerated, eventName, categor
       {open && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div className="bg-gray-900 border border-gray-700 rounded-2xl p-6 w-full max-w-md">
-            
             {/* Header */}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-white font-semibold text-lg">Enter Event Details</h2>
-              <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-white text-xl">&times;</button>
+              <h2 className="text-white font-semibold text-lg">
+                Enter Event Details
+              </h2>
+              <button
+                onClick={() => setOpen(false)}
+                className="text-gray-400 hover:text-white text-xl"
+              >
+                &times;
+              </button>
             </div>
 
             {/* Form Fields */}
@@ -73,27 +80,31 @@ export default function AIDescriptionGenerator({ onGenerated, eventName, categor
               <div>
                 <label className="text-gray-400 text-sm">Category</label>
                 <select
-                    name="category"
-                    value={form.category}
-                    onChange={handleChange}
-                    className="w-full mt-1 bg-gray-800 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-700"
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  className="w-full mt-1 bg-gray-800 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-700"
                 >
-                    <option value="concert">🎵 Concert</option>
-                    <option value="sports">⚽ Sports</option>
-                    <option value="theater">🎭 Theater</option>
-                    <option value="comedy">😂 Comedy</option>
-                    <option value="other">🎪 Other</option>
+                  <option value="concert">🎵 Concert</option>
+                  <option value="sports">⚽ Sports</option>
+                  <option value="theater">🎭 Theater</option>
+                  <option value="comedy">😂 Comedy</option>
+                  <option value="other">🎪 Other</option>
                 </select>
 
                 {/* Show text input only when "Other" is selected */}
                 {form.category === "other" && (
-                    <input
+                  <input
                     name="category"
-                    value={form.category === "other" ? form.customCategory || "" : ""}
-                    onChange={(e) => setForm({ ...form, customCategory: e.target.value })}
+                    value={
+                      form.category === "other" ? form.customCategory || "" : ""
+                    }
+                    onChange={(e) =>
+                      setForm({ ...form, customCategory: e.target.value })
+                    }
                     placeholder="Type your category..."
                     className="w-full mt-2 bg-gray-800 text-white rounded-lg px-3 py-2 text-sm outline-none border border-gray-700"
-                    />
+                  />
                 )}
               </div>
 
@@ -141,7 +152,6 @@ export default function AIDescriptionGenerator({ onGenerated, eventName, categor
             >
               {loading ? "Generating..." : "Generate Description"}
             </button>
-
           </div>
         </div>
       )}
