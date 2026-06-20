@@ -201,7 +201,7 @@ const sendTicketEmail = async (req, res) => {
           </div>
 
           <div style="text-align: center; color: #94a3b8; font-size: 12px; margin-top: 20px;">
-            <p>© 2025 E-Ticket Platform · Sri Lanka</p>
+            <p>© 2026 E-Ticket Platform · Built with Pasindu and Sindupa</p>
           </div>
 
         </div>

@@ -111,7 +111,7 @@ const CreateEventPage = () => {
                 type="text"
                 name="title"
                 className="input bg-[#18181b]/50"
-                placeholder="e.g. Colombo Music Festival 2025"
+                placeholder="e.g. Colombo Music Festival 2026"
                 value={form.title}
                 onChange={handleChange}
                 required
