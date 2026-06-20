@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const AI_URL = "https://eticket-platform-2.onrender.com";
+const AI_URL = "https://eticket-platform-1.onrender.com";
 
 export const chatAPI = (payload) => axios.post(`${AI_URL}/chat`, payload);
 
