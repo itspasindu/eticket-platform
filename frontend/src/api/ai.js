@@ -1,12 +1,15 @@
-import API from "./axios";
+import axios from "axios";
 
-export const chatAPI = (payload) => API.post("/ai/chat", payload);
+const AI_URL = "https://eticket-platform-2.onrender.com";
+
+export const chatAPI = (payload) => axios.post(`${AI_URL}/chat`, payload);
 
 export const generateDescriptionAPI = (payload) =>
-  API.post("/ai/generate-description", payload);
+  axios.post(`${AI_URL}/generate-description`, payload);
 
 export const getSimilarRecommendationsAPI = (eventId) =>
-  API.get(`/ai/recommendations/similar/${eventId}`);
+  axios.get(`${AI_URL}/recommendations/similar/${eventId}`);
 
 export const getPersonalizedRecommendationsAPI = (userId) =>
-  API.get(`/ai/recommendations/personalized/${userId}`);
+  axios.get(`${AI_URL}/recommendations/personalized/${userId}`);
+
