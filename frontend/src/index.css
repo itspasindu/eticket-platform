@@ -1,26 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* Custom global styles */
 body {
-  @apply bg-gray-950 text-gray-100;
+  @apply bg-background text-primary font-sans antialiased;
 }
 
 .btn-primary {
-  @apply bg-primary hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200;
+  @apply bg-primary hover:bg-white text-background font-medium py-2.5 px-6 rounded-md transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)];
 }
 
 .btn-secondary {
-  @apply bg-gray-800 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200;
+  @apply bg-transparent border border-accent hover:bg-accent text-primary font-medium py-2.5 px-6 rounded-md transition-all duration-300;
 }
 
 .card {
-  @apply bg-gray-900 rounded-xl border border-gray-800 p-6;
+  @apply bg-[#0e0e11] rounded-xl border border-accent p-6 hover:border-gray-600 transition-colors duration-300;
 }
 
 .input {
-  @apply w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-primary transition-colors;
+  @apply w-full bg-transparent border border-accent rounded-md px-4 py-3 text-primary placeholder-secondary focus:outline-none focus:border-primary transition-colors duration-300;
+}
+
+.glass-panel {
+  @apply bg-black/40 backdrop-blur-md border border-white/10;
 }
 
 .scrollbar-hide::-webkit-scrollbar {

@@ -101,132 +101,149 @@ const EventDetailPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      {/* Event Header */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-        {/* Image */}
-        <div className="lg:col-span-1">
-          <div className="w-full h-64 bg-gray-800 rounded-xl overflow-hidden">
-            {event?.image ? (
-              <img
-                src={event.image}
-                alt={event.title}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-7xl">
-                🎪
-              </div>
-            )}
+    <div className="min-h-screen bg-background pb-20">
+      {/* Hero Banner Image */}
+      <div className="relative w-full h-[50vh] min-h-[400px] bg-[#18181b] overflow-hidden">
+        {event?.image ? (
+          <>
+            <img src={event.image} alt={event.title} className="w-full h-full object-cover opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-accent to-background flex items-center justify-center">
+            <span className="text-9xl opacity-10">✦</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
           </div>
-        </div>
-
-        {/* Details */}
-        <div className="lg:col-span-2">
-          <span className="text-xs font-semibold bg-primary/20 text-primary px-3 py-1 rounded-full uppercase">
-            {event?.category}
-          </span>
-          <h1 className="text-4xl font-extrabold text-white mt-3 mb-4">
-            {event?.title}
-          </h1>
-          <p className="text-gray-400 mb-6">{event?.description}</p>
-
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="card py-3 px-4">
-              <p className="text-gray-500">📅 Date & Time</p>
-              <p className="text-white font-semibold">
-                {new Date(event?.date).toDateString()} · {event?.time}
-              </p>
-            </div>
-            <div className="card py-3 px-4">
-              <p className="text-gray-500">📍 Venue</p>
-              <p className="text-white font-semibold">
-                {event?.venue?.name}, {event?.venue?.city}
-              </p>
-            </div>
-            <div className="card py-3 px-4">
-              <p className="text-gray-500">🪑 Available Seats</p>
-              <p className="text-white font-semibold">
-                {event?.availableSeats}
-              </p>
-            </div>
-            <div className="card py-3 px-4">
-              <p className="text-gray-500">🎤 Organizer</p>
-              <p className="text-white font-semibold">
-                {event?.organizer?.name}
-              </p>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
 
-      {/* Seat Selection */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Seat Map */}
-        <div className="lg:col-span-2 card overflow-x-auto">
-          <h2 className="text-xl font-bold text-white mb-6">
-            Select Your Seats
-          </h2>
-          <SeatMap
-            seatMap={seatMap}
-            selectedSeats={selectedSeats}
-            onSeatClick={handleSeatClick}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-32 relative z-10">
+        
+        {/* Event Header Card */}
+        <div className="glass-panel p-8 sm:p-10 rounded-3xl mb-12 animate-slide-up shadow-2xl">
+          <div className="flex flex-col md:flex-row gap-8 items-start justify-between">
+            <div className="flex-1">
+              <span className="inline-block text-xs font-bold tracking-widest text-background bg-primary px-3 py-1.5 rounded-full uppercase mb-4">
+                {event?.category}
+              </span>
+              <h1 className="text-5xl sm:text-6xl font-bold tracking-tighter text-primary mb-6">
+                {event?.title}
+              </h1>
+              <p className="text-secondary text-lg leading-relaxed max-w-3xl">
+                {event?.description}
+              </p>
+            </div>
+            
+            {/* Quick Stats */}
+            <div className="w-full md:w-auto grid grid-cols-2 md:grid-cols-1 gap-4 md:min-w-[250px]">
+              <div className="bg-[#18181b]/80 border border-accent rounded-2xl p-5">
+                <p className="text-xs uppercase tracking-widest text-secondary mb-1">Date & Time</p>
+                <p className="text-primary font-medium">{new Date(event?.date).toDateString()}</p>
+                <p className="text-primary font-medium">{event?.time}</p>
+              </div>
+              <div className="bg-[#18181b]/80 border border-accent rounded-2xl p-5">
+                <p className="text-xs uppercase tracking-widest text-secondary mb-1">Venue</p>
+                <p className="text-primary font-medium">{event?.venue?.name}</p>
+                <p className="text-secondary text-sm">{event?.venue?.city}</p>
+              </div>
+              <div className="bg-[#18181b]/80 border border-accent rounded-2xl p-5 col-span-2 md:col-span-1 flex justify-between items-center">
+                <div>
+                  <p className="text-xs uppercase tracking-widest text-secondary mb-1">Availability</p>
+                  <p className="text-primary font-medium">{event?.availableSeats} Seats Left</p>
+                </div>
+                <div className="w-10 h-10 rounded-full border border-accent flex items-center justify-center text-secondary">🪑</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Seat Selection & Booking */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
+          
+          {/* Seat Map */}
+          <div className="lg:col-span-2 glass-panel rounded-3xl p-6 sm:p-10 animate-slide-up" style={{ animationDelay: "100ms" }}>
+            <div className="flex items-center justify-between mb-8 pb-6 border-b border-accent/50">
+              <h2 className="text-2xl font-semibold tracking-tight text-primary">Select Seats</h2>
+              <div className="flex items-center gap-4 text-xs font-medium text-secondary tracking-wider uppercase">
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-accent"></span>Available</div>
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-primary"></span>Selected</div>
+              </div>
+            </div>
+            
+            <div className="overflow-x-auto pb-4">
+              <SeatMap
+                seatMap={seatMap}
+                selectedSeats={selectedSeats}
+                onSeatClick={handleSeatClick}
+              />
+            </div>
+          </div>
+
+          {/* Booking Summary Sidebar */}
+          <div className="lg:col-span-1 animate-slide-up" style={{ animationDelay: "200ms" }}>
+            <div className="glass-panel rounded-3xl p-6 sm:p-8 sticky top-28">
+              <h2 className="text-xl font-semibold tracking-tight text-primary mb-6">Booking Summary</h2>
+
+              {selectedSeatDetails.length === 0 ? (
+                <div className="py-8 text-center border border-dashed border-accent rounded-xl mb-6">
+                  <p className="text-secondary text-sm">No seats selected</p>
+                </div>
+              ) : (
+                <div className="space-y-3 mb-8 max-h-[300px] overflow-y-auto pr-2 scrollbar-hide">
+                  {selectedSeatDetails.map((seat) => (
+                    <div key={seat._id} className="flex justify-between items-center bg-[#18181b]/50 border border-accent rounded-lg p-3 text-sm">
+                      <div>
+                        <span className="text-primary font-medium block">Seat {seat.seatNumber}</span>
+                        <span className="text-secondary text-xs uppercase tracking-wider">{seat.category}</span>
+                      </div>
+                      <span className="text-primary font-medium tracking-wide">
+                        LKR {seat.price.toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="border-t border-accent/50 pt-6 mb-8">
+                <div className="flex justify-between items-end">
+                  <span className="text-secondary text-sm uppercase tracking-wider font-medium">Total</span>
+                  <span className="text-3xl font-bold tracking-tighter text-primary">
+                    <span className="text-lg text-secondary font-medium mr-1">LKR</span>
+                    {totalAmount.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleProceedToCheckout}
+                disabled={selectedSeats.length === 0 || loading}
+                className="btn-primary w-full py-4 text-base tracking-wide flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
+              >
+                {loading ? (
+                  <span className="animate-pulse">Processing...</span>
+                ) : (
+                  <>
+                    Checkout {selectedSeats.length > 0 && `(${selectedSeats.length})`}
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                  </>
+                )}
+              </button>
+
+              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-secondary/80">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <span>Seats are reserved for 10 minutes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-accent/50 pt-16">
+          <EventRecommendations
+            title="More Like This"
+            fetchUrl={`/ai/recommendations/similar/${id}`}
           />
         </div>
-
-        {/* Booking Summary */}
-        <div className="lg:col-span-1">
-          <div className="card sticky top-24">
-            <h2 className="text-xl font-bold text-white mb-4">
-              Booking Summary
-            </h2>
-
-            {selectedSeatDetails.length === 0 ? (
-              <p className="text-gray-500 text-sm">No seats selected yet</p>
-            ) : (
-              <div className="space-y-2 mb-4">
-                {selectedSeatDetails.map((seat) => (
-                  <div key={seat._id} className="flex justify-between text-sm">
-                    <span className="text-gray-400">
-                      Seat {seat.seatNumber} ({seat.category})
-                    </span>
-                    <span className="text-white font-semibold">
-                      LKR {seat.price.toLocaleString()}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="border-t border-gray-700 pt-4 mb-6">
-              <div className="flex justify-between font-bold text-lg">
-                <span className="text-gray-300">Total</span>
-                <span className="text-primary">
-                  LKR {totalAmount.toLocaleString()}
-                </span>
-              </div>
-            </div>
-
-            <button
-              onClick={handleProceedToCheckout}
-              disabled={selectedSeats.length === 0 || loading}
-              className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading
-                ? "Processing..."
-                : `Book ${selectedSeats.length} Seat${selectedSeats.length !== 1 ? "s" : ""}`}
-            </button>
-
-            <p className="text-xs text-gray-500 text-center mt-3">
-              🔒 Seats held for 10 minutes after selection
-            </p>
-          </div>
-        </div>
       </div>
-      <EventRecommendations
-        title="Similar Events"
-        fetchUrl={`/ai/recommendations/similar/${id}`}
-      />
     </div>
   );
 };
