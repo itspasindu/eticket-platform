@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import eventPlaceholder from '../../assets/event-placeholder.png';
 
 const EventCard = ({ event }) => {
   const eventDate = new Date(event.date).toDateString();
@@ -16,9 +17,11 @@ const EventCard = ({ event }) => {
               className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-accent/30 text-4xl">
-              ✦
-            </div>
+            <img
+              src={eventPlaceholder}
+              alt="Placeholder"
+              className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100"
+            />
           )}
           {/* Category Badge overlay */}
           <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md text-primary text-xs font-semibold px-3 py-1.5 rounded-md uppercase tracking-wider border border-white/10">

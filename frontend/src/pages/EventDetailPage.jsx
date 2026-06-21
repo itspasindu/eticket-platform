@@ -1,4 +1,5 @@
 import { useState } from "react";
+import eventPlaceholder from "../assets/event-placeholder.png";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getEventByIdAPI } from "../api/events";
@@ -110,10 +111,10 @@ const EventDetailPage = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
           </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-accent to-background flex items-center justify-center">
-            <span className="text-9xl opacity-10">✦</span>
-            <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-          </div>
+          <>
+            <img src={eventPlaceholder} alt="Event Placeholder" className="w-full h-full object-cover opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+          </>
         )}
       </div>
 
